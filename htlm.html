@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greens del rincon </title>
+    <link rel="stylesheet" href="./css.css">
+    
+</head>
+<body>
+
+<header>
+    <h1 >Venta de Matas, Materas y Semillas</h1>
+    <img src="./img/back.PNG" alt="">
+</header>
+
+<!-- Contenedor para productos -->
+<section id="products"></section>
+
+<!-- Botón para ver el carrito -->
+<button id="cart-button" onclick="showCart()">🛒 Ver carrito</button>
+
+<!-- Carrito -->
+<div id="cart-modal">
+    <div id="cart-content">
+        <h2>Tu Carrito</h2>
+        <ul id="cart-items"></ul>
+        <p><strong>Total:</strong> $<span id="total-price">0</span></p>
+        <button id="close-cart" onclick="closeCart()">Cerrar</button>
+    </div>
+</div>
+
+<script>
+    // Productos con descripción adicional
+    const products = [
+        { name: 'Verdelin', price: 20, image: './img/selva.jpg', info: 'Esta impresionante planta de hojas verdes grandes casi toca el suelo, creando una atmósfera vibrante en tu hogar. La cerámica, decorada como un mural, realza su belleza y añade un toque artístico a cualquier ambiente. Ideal para quienes desean un elemento natural que llame la atención y aporte carácter a su espacio' },
+        { name: 'Violetana', price: 27, image: './img/flormorada.jpg', info: 'La planta Pétalos Encantados es un espectáculo visual, con una hermosa flor rosa que está pintada con fragmentos morados, creando un contraste fascinante. Su aspecto vibrante y único la convierte en una pieza central ideal para cualquier habitación. Aunque requiere un poco más de atención en su cuidado, especialmente en lo que respecta a la luz y la humedad, su belleza bien vale el esfuerzo. ' },
+        { name: 'Rubi', price: 18, image: './img/florvenas.jpg', info: 'Esta hermosa  flor que resalta con sus hojas verdes, acentuadas por delicadas venas rojas que le otorgan un carácter distintivo. Aunque su apariencia vibrante y única la convierte en un elemento decorativo ideal, requiere un cuidado más especializado, adaptándose mejor a condiciones de luz indirecta y con un riego controlado para mantener su salud. Perfecta para jardineros que buscan un desafío.' },
+        { name: 'Unicorona ', price: 46, image: './img/florunicornio.jpg', info: 'Esta impresionante planta grande presenta un tallo robusto que sostiene hermosas plantas que sobresalen, evocando la imagen mágica de un unicornio. Sus cabezas de color rosa aportan un toque vibrante y juguetón a cualquier espacio, esta planta no solo es visualmente atractiva, sino que también añade un aire de fantasía y originalidad a tu decoración. Un verdadero símbolo de creatividad y estilo que seguramente encantará a todos.' },
+        { name: 'Espadita Brillante', price: 15, image: './img/captus.jpg', info: 'Este cactus en una matera de plástico verde brillante es una declaración de estilo moderno y original. Con sus espadas largas y cortas que emergen de la base, aporta un toque único a cualquier rincón de tu hogar. Perfecto para aquellos que buscan una planta de bajo mantenimiento, este cactus no solo es atractivo, sino que también añade un aire contemporáneo a tu decoración.' },
+        { name: 'Verdistela', price: 25, image: './img/florcentro.jpg', info: 'Esta hermosa planta destaca por su diseño único, con hojas semi blancas y toques de rosa y verde, rodeando una planta verde más alta que sobresale en el centro., su combinación de colores aporta alegríaa tu hogar. Fácil de cuidar, se adapta a diferentes ambientes, haciendo de Centro Verde una opción perfecta para quienes buscan un toque natural y colorido. ' },
+        { name: 'Elefanta Verde', price: 21, image: './img/elefante.jpg', info: 'Esta encantadora planta verde en su matera blanca con forma de elefante es perfecta para añadir un toque de alegría a cualquier espacio. Su diseño divertido y único no solo aporta frescura, sino que también es una excelente opción para quienes buscan un elemento decorativo y vibrante.' },
+        { name: 'Pelusa', price: 12, image: './img/planta chiquita.jpg', info: 'Esta encantadora planta chiquita con pelitos cortos es el complemento perfecto para cualquier espacio. Su matera negra, decorada con semillas en el fondo, le da un toque elegante y moderno, esta planta es fácil de cuidar y añade un encanto especial a tu hogar. Dale un toque de frescura y estilo con esta pequeña belleza que no pasará desapercibida..' },
+        { name: 'Eco Verdoso', price: 40, image: './img/ilarga.jpg', info: 'Esta elegante planta larga y verde se alza majestuosamente, aportando un toque de frescura y vida a cualquier espacio. Con sus hojas alargadas y vibrantes, faciles de cuidar se adaptá a diferentes condiciones de luz, lo que la convierte en una opción perfecta para cualquier hogar. Dale un nuevo aire a tu ambiente con esta impresionante planta que crece hacia arriba, simbolizando prosperidad y crecimiento.' },
+        { name: 'Radiante', price: 32, image: './img/amarillo.jpg', info: 'Esta planta amarilla cautiva a primera vista con su brillante color que irradia alegría. El corazón de la corona, en un delicado tono rosa, añade un contraste encantador, realzando su belleza natural. Con raíces delgadas pero altas, esta planta no solo se sostiene con gracia, sino que también aporta un aire de ligereza a cualquier espacio. Perfecta para iluminar mesas, estanterías o rincones olvidados, es una opción ideal para quienes buscan un toque de color y vitalidad en su hogar. Su presencia transforma el ambiente, convirtiendo lo cotidiano en algo especial.' },
+        { name: 'Materas', price: '??', image: './img/materagris.jpg', info: 'En @RinconPlants, tenemos todo tipo de materas para cada estilo y espacio. Desde diseños minimalistas hasta coloridos y creativos, nuestras materas son el complemento perfecto para tus plantas de interior. Además, si tienes una idea única en mente, ofrecemos la opción de personalizar tu matera, ¡exactamente como la imaginas! Crea un hogar único para tus plantas con nuestras materas exclusivas.' },
+        { name: 'Semillas', price: 15, image: './img/semillas.jpg', info: 'ofrecemos una amplia variedad de semillas para que puedas cultivar tu propio jardín en casa. Desde hierbas aromáticas hasta flores coloridas, tenemos todo lo que necesitas para hacer crecer un espacio verde lleno de vida. Además, si buscas algo especial, ¡también ofrecemos semillas modificadas!' },
+    ];
+
+    let cart = [];
+    let totalPrice = 0;
+
+    // Función para generar los productos en HTML
+    function displayProducts() {
+        const productsContainer = document.getElementById('products');
+        products.forEach(product => {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
+
+            const productImage = document.createElement('img');
+            productImage.src = product.image;
+            productImage.alt = product.name;
+
+            const productTitle = document.createElement('h3');
+            productTitle.textContent = product.name;
+
+            const productPrice = document.createElement('p');
+            productPrice.textContent = `Precio: $${product.price}`;
+
+            const productButton = document.createElement('button');
+            productButton.textContent = 'Añadir al carrito';
+            productButton.onclick = () => addToCart(product.name, product.price);
+
+            // Botón para mostrar más información
+            const infoButton = document.createElement('button');
+            infoButton.textContent = 'Más información';
+            infoButton.onclick = () => toggleInfo(productDiv);
+
+            // Información adicional oculta
+            const moreInfo = document.createElement('div');
+            moreInfo.classList.add('more-info');
+            moreInfo.textContent = product.info;
+
+            productDiv.appendChild(productImage);
+            productDiv.appendChild(productTitle);
+            productDiv.appendChild(productPrice);
+            productDiv.appendChild(productButton);
+            productDiv.appendChild(infoButton);
+            productDiv.appendChild(moreInfo);
+
+            productsContainer.appendChild(productDiv);
+        });
+    }
+
+    // Función para añadir al carrito
+    function addToCart(product, price) {
+        cart.push({ product, price });
+        totalPrice += price;
+        alert(`${product} ha sido añadido al carrito.`);
+    }
+
+    // Función para mostrar el carrito
+    function showCart() {
+        const cartModal = document.getElementById('cart-modal');
+        const cartItems = document.getElementById('cart-items');
+        const totalPriceElement = document.getElementById('total-price');
+
+        cartItems.innerHTML = '';
+
+        cart.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = `${item.product} - $${item.price}`;
+            cartItems.appendChild(li);
+        });
+
+        totalPriceElement.textContent = totalPrice;
+
+        cartModal.style.display = 'flex';
+    }
+
+    // Función para cerrar el carrito
+    function closeCart() {
+        const cartModal = document.getElementById('cart-modal');
+        cartModal.style.display = 'none';
+    }
+
+    // Función para mostrar/ocultar información adicional
+    function toggleInfo(productDiv) {
+        const moreInfo = productDiv.querySelector('.more-info');
+        moreInfo.classList.toggle('active');
+    }
+
+    // Generar los productos al cargar la página
+    window.onload = displayProducts;
+</script>
+
+</body>
+</html>
